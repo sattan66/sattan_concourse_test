@@ -5,10 +5,18 @@ resources:
   type: time
   source: {interval: 1m}
 
+-name: git-repo
+  type: git
+  source:
+    uri: https://github.com/sattan66/sattan_concourse_test.git
+
+
 jobs:
 - name: ssl-validity
   plan:
   - get: every-1m
+    trigger: true
+  - get: git-repo
     trigger: true
   - task: check-ssl-validity
     config:
@@ -17,9 +25,9 @@ jobs:
         type: docker-image
         source: {repository: ubuntu}
       inputs:
-      - name: satta_concourse_test
+      - name: sattan_concourse_test
         path: ./
       run:
         path: sh
         args: [check_SSL_validity.sh]
-        dir: satta_concourse_test
+        dir: sattan_concourse_test
